@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { CommandCard } from "@/components/CommandCard";
 import { RequestCommandForm } from "@/components/RequestCommandForm";
+import { UploadCommandForm } from "@/components/UploadCommandForm";
 import { Footer } from "@/components/Footer";
 import { commands } from "@/data/commands";
 
@@ -63,6 +64,11 @@ const Index = () => {
               ))}
             </div>
           )}
+        </section>
+
+        {/* Upload Form */}
+        <section className="max-w-2xl mx-auto mb-12">
+          <UploadCommandForm />
         </section>
 
         {/* Request Form */}
