@@ -460,5 +460,88 @@ location ~ \\.php$ {
 sudo systemctl restart nginx
 sudo systemctl restart php8.1-fpm
 \`\`\``
+  },
+  {
+    id: "postgres-django-setup",
+    title: "PostgreSQL Database for Django",
+    description: "Create and configure PostgreSQL database for Django projects with proper permissions",
+    category: "Database",
+    tags: ["postgresql", "django", "database", "python"],
+    content: `# PostgreSQL Database Setup for Django
+
+## Step 1: Switch to Postgres User
+\`\`\`bash
+sudo -u postgres psql
+\`\`\`
+
+## Step 2: Create Database and User
+\`\`\`sql
+CREATE DATABASE testing_db001;
+CREATE USER testing_user WITH PASSWORD 'Ch@123456';
+\`\`\`
+
+## Step 3: Configure Role Defaults
+\`\`\`sql
+ALTER ROLE testing_user SET client_encoding TO 'utf8';
+ALTER ROLE testing_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE testing_user SET timezone TO 'UTC';
+\`\`\`
+
+## Step 4: Grant Privileges on Database
+\`\`\`sql
+GRANT ALL PRIVILEGES ON DATABASE testing_db001 TO testing_user;
+\`\`\`
+
+## Step 5: Connect to Database
+\`\`\`sql
+\\c testing_db001;
+\`\`\`
+
+## Step 6: Fix Schema Permissions
+\`\`\`sql
+GRANT ALL ON SCHEMA public TO testing_user;
+ALTER SCHEMA public OWNER TO testing_user;
+\`\`\`
+
+## Step 7: Allow User to Create Databases (Optional)
+\`\`\`sql
+ALTER ROLE testing_user CREATEDB;
+\`\`\`
+
+## Step 8: Exit PostgreSQL
+\`\`\`sql
+\\q
+\`\`\`
+
+## Step 9: Configure Django .env
+Create a \`.env\` file in your Django project root:
+\`\`\`bash
+DB_NAME=testing_db001
+DB_USER=testing_user
+DB_PASSWORD=Ch@123456
+DB_HOST=localhost
+DB_PORT=5432
+\`\`\`
+
+## Step 10: Update Django settings.py
+\`\`\`python
+import os
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    }
+}
+\`\`\`
+
+## Step 11: Run Django Migrations
+\`\`\`bash
+python manage.py migrate
+\`\`\``
   }
 ];
