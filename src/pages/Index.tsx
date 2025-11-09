@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { CategoryFilter } from "@/components/CategoryFilter";
@@ -6,11 +7,35 @@ import { CommandCard } from "@/components/CommandCard";
 import { RequestCommandForm } from "@/components/RequestCommandForm";
 import { UploadCommandForm } from "@/components/UploadCommandForm";
 import { Footer } from "@/components/Footer";
-import { commands } from "@/data/commands";
+import { supabase } from "@/integrations/supabase/client";
+import { categories } from "@/data/commands";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Fetch commands from database
+  const { data: commands = [], isLoading } = useQuery({
+    queryKey: ['commands'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('commands')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      // Transform database data to match Command interface
+      return data.map(cmd => ({
+        id: cmd.command_id,
+        title: cmd.title,
+        description: cmd.description,
+        category: cmd.category,
+        tags: cmd.tags,
+        content: cmd.content
+      }));
+    }
+  });
 
   const filteredCommands = useMemo(() => {
     return commands.filter((command) => {
@@ -26,11 +51,11 @@ const Index = () => {
 
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, commands]);
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header commandCount={commands.length} />
       <Hero searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <CategoryFilter
         selectedCategory={selectedCategory}
@@ -50,7 +75,11 @@ const Index = () => {
             </p>
           </div>
 
-          {filteredCommands.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-muted-foreground">Loading commands...</p>
+            </div>
+          ) : filteredCommands.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-xl text-muted-foreground">No commands found</p>
               <p className="text-sm text-muted-foreground mt-2">

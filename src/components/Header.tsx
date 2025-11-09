@@ -1,6 +1,10 @@
 import { Code2, Terminal } from "lucide-react";
 
-export const Header = () => {
+interface HeaderProps {
+  commandCount?: number;
+}
+
+export const Header = ({ commandCount = 0 }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto px-4 py-4">
@@ -19,7 +23,7 @@ export const Header = () => {
           </div>
           <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
             <span className="px-3 py-1 rounded-full bg-card border border-border">
-              {commands.length}+ Commands
+              {commandCount}+ Commands
             </span>
           </div>
         </div>
@@ -27,5 +31,3 @@ export const Header = () => {
     </header>
   );
 };
-
-import { commands } from "@/data/commands";

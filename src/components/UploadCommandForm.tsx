@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Download, FileCheck } from "lucide-react";
 import { categories } from "@/data/commands";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ParsedCommand {
   id: string;
@@ -113,27 +114,40 @@ export const UploadCommandForm = () => {
       const parsedCommand = parseMarkdownFile(content);
 
       if (parsedCommand) {
-        // Here you would typically send this to an API or update your data source
-        // For now, we'll just show a success message with the parsed data
-        console.log("Parsed command:", parsedCommand);
+        // Save to database
+        const { error } = await supabase
+          .from('commands')
+          .insert({
+            command_id: parsedCommand.id,
+            title: parsedCommand.title,
+            description: parsedCommand.description,
+            category: parsedCommand.category,
+            tags: parsedCommand.tags,
+            content: parsedCommand.content
+          });
+
+        if (error) {
+          // Check if it's a duplicate error
+          if (error.code === '23505') {
+            throw new Error(`Command with ID "${parsedCommand.id}" already exists`);
+          }
+          throw error;
+        }
         
         toast({
           title: "✅ Command Uploaded Successfully!",
           description: `"${parsedCommand.title}" has been added to ${parsedCommand.category} category`,
         });
 
-        // Show instructions to user
-        setTimeout(() => {
-          toast({
-            title: "Next Steps",
-            description: "To permanently add this command, copy the parsed data from console and add it to src/data/commands.ts",
-          });
-        }, 2000);
-
         setFile(null);
         // Reset file input
         const fileInput = document.getElementById('file-upload') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
+        
+        // Refresh the page after a short delay to show the new command
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       }
     } catch (error) {
       toast({
