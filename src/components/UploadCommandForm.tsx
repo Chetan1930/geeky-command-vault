@@ -50,11 +50,7 @@ export const UploadCommandForm = () => {
         throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
       }
 
-      // Validate category
-      const validCategories = categories.filter(cat => cat !== "All");
-      if (!validCategories.includes(metadata.category)) {
-        throw new Error(`Invalid category: ${metadata.category}. Must be one of: ${validCategories.join(', ')}`);
-      }
+      // Category validation removed - accepting any category now
 
       // Parse tags (comma-separated)
       const tags = metadata.tags.split(',').map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0);
@@ -225,7 +221,6 @@ export const UploadCommandForm = () => {
             <li>Frontmatter section with metadata (between --- markers)</li>
             <li>Required fields: id, title, description, category, tags</li>
             <li>ID must be in kebab-case (e.g., docker-basics)</li>
-            <li>Category must match existing categories</li>
             <li>Tags should be comma-separated</li>
           </ul>
         </div>

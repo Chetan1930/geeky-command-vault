@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { CommandCard } from "@/components/CommandCard";
-import { RequestCommandForm } from "@/components/RequestCommandForm";
+
 import { UploadCommandForm } from "@/components/UploadCommandForm";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,7 +56,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header commandCount={commands.length} />
-      <Hero searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Hero searchQuery={searchQuery} onSearchChange={setSearchQuery} commandCount={commands.length} />
       <CategoryFilter
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
@@ -98,11 +98,6 @@ const Index = () => {
         {/* Upload Form */}
         <section className="max-w-2xl mx-auto mb-12">
           <UploadCommandForm />
-        </section>
-
-        {/* Request Form */}
-        <section className="max-w-2xl mx-auto">
-          <RequestCommandForm />
         </section>
       </main>
 

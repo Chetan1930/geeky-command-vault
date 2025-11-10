@@ -4,9 +4,10 @@ import { Input } from "./ui/input";
 interface HeroProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  commandCount: number;
 }
 
-export const Hero = ({ searchQuery, onSearchChange }: HeroProps) => {
+export const Hero = ({ searchQuery, onSearchChange, commandCount }: HeroProps) => {
   return (
     <div className="relative overflow-hidden border-b border-border bg-gradient-to-br from-background via-background to-card">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
@@ -18,7 +19,7 @@ export const Hero = ({ searchQuery, onSearchChange }: HeroProps) => {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
             </span>
-            {commands.length}+ Developer Commands & Resources
+            {commandCount}+ Developer Commands & Resources
           </div>
           
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground md:text-6xl animate-slide-up">
@@ -48,4 +49,4 @@ export const Hero = ({ searchQuery, onSearchChange }: HeroProps) => {
   );
 };
 
-import { commands } from "@/data/commands";
+
