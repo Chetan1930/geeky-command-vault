@@ -221,7 +221,6 @@ export const UploadCommandForm = () => {
             <li>Frontmatter section with metadata (between --- markers)</li>
             <li>Required fields: id, title, description, category, tags</li>
             <li>ID must be in kebab-case (e.g., docker-basics)</li>
-            <li>Category can be any value (new categories accepted)</li>
             <li>Tags should be comma-separated</li>
           </ul>
         </div>
