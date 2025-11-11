@@ -38,6 +38,9 @@ const Index = () => {
 
   // Generate dynamic categories from commands
   const categories = useMemo(() => {
+    if (!commands || commands.length === 0) {
+      return ["All"];
+    }
     const uniqueCategories = new Set(commands.map(cmd => cmd.category));
     return ["All", ...Array.from(uniqueCategories).sort()];
   }, [commands]);
