@@ -1,12 +1,12 @@
-import { categories } from "@/data/commands";
 import { Button } from "./ui/button";
 
 interface CategoryFilterProps {
+  categories: string[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
 }
 
-export const CategoryFilter = ({ selectedCategory, onCategoryChange }: CategoryFilterProps) => {
+export const CategoryFilter = ({ categories, selectedCategory, onCategoryChange }: CategoryFilterProps) => {
   return (
     <div className="border-b border-border bg-card/50">
       <div className="container mx-auto px-4 py-4">

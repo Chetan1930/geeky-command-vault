@@ -8,7 +8,6 @@ import { CommandCard } from "@/components/CommandCard";
 import { UploadCommandForm } from "@/components/UploadCommandForm";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { categories } from "@/data/commands";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +36,15 @@ const Index = () => {
     }
   });
 
+  // Generate dynamic categories from commands
+  const categories = useMemo(() => {
+    if (!commands || commands.length === 0) {
+      return ["All"];
+    }
+    const uniqueCategories = new Set(commands.map(cmd => cmd.category));
+    return ["All", ...Array.from(uniqueCategories).sort()];
+  }, [commands]);
+
   const filteredCommands = useMemo(() => {
     return commands.filter((command) => {
       const matchesSearch =
@@ -58,6 +66,7 @@ const Index = () => {
       <Header commandCount={commands.length} />
       <Hero searchQuery={searchQuery} onSearchChange={setSearchQuery} commandCount={commands.length} />
       <CategoryFilter
+        categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
